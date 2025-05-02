@@ -1,18 +1,17 @@
 package org.machinestalk.api;
 
-import org.machinestalk.api.dto.UserDto;
-import org.machinestalk.api.dto.UserRegistrationDto;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import org.machinestalk.api.dto.UserDto;
+import org.machinestalk.api.dto.UserRegistrationDto;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-@RequestMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+import reactor.core.publisher.Mono;
+
+
 public interface UserApi {
 
   /**
@@ -30,6 +29,6 @@ public interface UserApi {
    * @param id user id
    * @return user infos
    */
-  @GetMapping("/users/${userId}")
-  Mono<UserDto> findUserById(long id);
+  @GetMapping("/users/{id}")
+  Mono<UserDto> findUserById(@PathVariable long id);
 }

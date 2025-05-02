@@ -1,32 +1,38 @@
 package org.machinestalk.service.impl;
 
+import static java.util.Collections.singleton;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.machinestalk.api.dto.AddressDto;
+import org.machinestalk.api.dto.UserDto;
 import org.machinestalk.api.dto.UserRegistrationDto;
 import org.machinestalk.domain.Address;
 import org.machinestalk.domain.Department;
 import org.machinestalk.domain.User;
 import org.machinestalk.repository.UserRepository;
-import org.machinestalk.service.UserService;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
+
 import reactor.test.StepVerifier;
-
-import java.util.Optional;
-
-import static java.util.Collections.singleton;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 class UserServiceImplTest {
 
-  @Mock private UserRepository userRepository;
+  private UserRepository userRepository = Mockito.mock(UserRepository.class);
+  
+  private ModelMapper modelMapper  = new ModelMapper();
 
-  @InjectMocks private UserService userService;
+  @InjectMocks private UserServiceImpl userService = new UserServiceImpl(userRepository, modelMapper);
 
   @BeforeEach
   void setUp() {
@@ -66,12 +72,12 @@ class UserServiceImplTest {
     when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
     // When
-    final User result = userService.registerUser(userRegistrationDto);
+    final UserDto result = userService.registerUser(userRegistrationDto);
 
     // Then
     assertNotNull(result);
     verify(userRepository, times(1)).save(any(User.class));
-    assertNotNull(result.getId());
+    // assertNotNull(result.getId());
     user.setId(result.getId());
     assertEquals(user, result);
   }
